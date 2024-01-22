@@ -1,3 +1,9 @@
+.my_bg{
+    background-image: url(../img/2102.i518.009_sky_cloud_evening_illustration.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
 .carousel{
     position: relative;
 }
@@ -14,6 +20,23 @@
     opacity: 80%;
     text-align: center;
 }
+
+main > div:first-child img,
+main > div:first-child div
+{
+    display: none;
+}
+
+main > div:first-child img.active,
+main > div:first-child div.active{
+    display: block;
+}
+
+main > div:first-child img{
+    width: 75%;
+}
+
+
 
 
 main > div:nth-child(2){
@@ -42,6 +65,6 @@ main > div:nth-child(2) figure img{
     opacity: 50%; 
 }
 
-main > div:nth-child(2) figure img.active{
+main > div:nth-child(2) figure img.opacity{
     opacity: 100%; 
 }
