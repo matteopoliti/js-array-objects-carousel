@@ -1,0 +1,47 @@
+.carousel{
+    position: relative;
+}
+
+.carousel_caption{
+    position: absolute;
+    right: 15%;
+    bottom: 1.25rem;
+    left: 15%;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    color: black;
+    background-color: white;
+    opacity: 80%;
+    text-align: center;
+}
+
+
+main > div:nth-child(2){
+    position: relative; 
+}
+
+.fa-circle-chevron-left{
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    left: 20px;
+    cursor: pointer;
+    font-size: 30px;
+}
+
+.fa-circle-chevron-right{
+    position: absolute;
+    transform: translateY(-50%);
+    top : 50%;
+    right: 20px;
+    cursor: pointer;
+    font-size: 30px;
+}
+
+main > div:nth-child(2) figure img{
+    opacity: 50%; 
+}
+
+main > div:nth-child(2) figure img.active{
+    opacity: 100%; 
+}
