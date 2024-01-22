@@ -44,7 +44,7 @@ for( let i = 0; i < animeArray.length; i++ ){
             </div>
         `
         figureHtml.innerHTML += ` 
-        <img src="./assets/img/${animeArray[i].urlImmagine}" class="border border-black border-2 p-0 col-2 d-block opacity">
+        <img src="./assets/img/${animeArray[i].urlImmagine}" class="border border-black border-2 p-0 col-2 d-block opacity" id = "thumbnail${i}" >
     `
     } else {
         risultatoHtml.innerHTML += `
@@ -55,7 +55,7 @@ for( let i = 0; i < animeArray.length; i++ ){
             </div>
         `
         figureHtml.innerHTML += ` 
-        <img src="./assets/img/${animeArray[i].urlImmagine}" class="border border-black border-2 p-0 col-2 d-block">
+        <img src="./assets/img/${animeArray[i].urlImmagine}" class="border border-black border-2 p-0 col-2 d-block" id = "thumbnail${i}" >
     `
     }  
     
@@ -67,104 +67,127 @@ let immagineCorrente = 0
 let immagineCorrenteThumbnail = 0
 let captionCorrente = 0
 
+let autoplayTimer;
+let autoplayDirection = 1;
+
+startAutoplay();
 
 arrowLeft.addEventListener( "click", function(){
 
-    let bigImage = document.querySelectorAll( 'main > div:first-child img' )
-    console.log( bigImage )
-        
-    bigImage[immagineCorrente].classList.remove( 'active' )
+    stopAutoplay();
 
     if( immagineCorrente == 0 ){
-        immagineCorrente = bigImage.length - 1
+        immagineCorrente = animeArray.length - 1
     } else {
         immagineCorrente--
     }
 
-    bigImage[immagineCorrente].classList.add( 'active' )
-
-
-
-    let caption = document.querySelectorAll( 'main > div:first-child div' )
-    console.log( caption )
-        
-    caption[captionCorrente].classList.remove( 'active' )
-
+   
     if( captionCorrente == 0 ){
-        captionCorrente = caption.length - 1
+        captionCorrente = animeArray.length - 1
     } else {
         captionCorrente--
     }
 
-    caption[captionCorrente].classList.add( 'active' )
-
-
-
-
-    
-    let thumbnail = document.querySelectorAll( 'figure img' )
-    console.log( thumbnail )
-        
-    thumbnail[immagineCorrenteThumbnail].classList.remove( 'opacity' )
 
     if( immagineCorrenteThumbnail == 0 ){
-        immagineCorrenteThumbnail = thumbnail.length - 1
+        immagineCorrenteThumbnail = animeArray.length - 1
     } else {
         immagineCorrenteThumbnail--
     }
 
-    thumbnail[immagineCorrenteThumbnail].classList.add( 'opacity' )
     
-    
+    updateCarousel();
+    startAutoplay()
 
 } )
 
 arrowRight.addEventListener( "click", function(){
 
-    let bigImage = document.querySelectorAll( 'main > div:first-child img' )
-    console.log( bigImage )
-        
-    bigImage[immagineCorrente].classList.remove( 'active' )
-
-    if(immagineCorrente == bigImage.length - 1 ){
+    stopAutoplay();
+    if(immagineCorrente == animeArray.length - 1 ){
         
         immagineCorrente = 0 
     } else {
         immagineCorrente++
     }
 
-    bigImage[immagineCorrente].classList.add( 'active' )
 
-
-
-    let caption = document.querySelectorAll( 'main > div:first-child div' )
-    console.log( caption )
-        
-    caption[captionCorrente].classList.remove( 'active' )
-
-    if( captionCorrente == caption.length - 1 ){
+    if( captionCorrente == animeArray.length - 1 ){
         captionCorrente = 0
     } else {
         captionCorrente++
     }
 
-    caption[captionCorrente].classList.add( 'active' )
 
-
-    
-    let thumbnail = document.querySelectorAll( 'figure img' )
-    console.log( thumbnail )
-        
-    thumbnail[immagineCorrenteThumbnail].classList.remove( 'opacity' )
-
-    if( immagineCorrenteThumbnail == thumbnail.length - 1 ){
+    if( immagineCorrenteThumbnail == animeArray.length - 1 ){
         immagineCorrenteThumbnail = 0
     } else {
         immagineCorrenteThumbnail++
     }
 
-    thumbnail[immagineCorrenteThumbnail].classList.add( 'opacity' )
-    
-    
+   
+    updateCarousel()
+    startAutoplay()
 
 } )
+
+const thumbnails = document.querySelectorAll('figure img');
+
+thumbnails.forEach((thumbnail, index) => {
+    thumbnail.addEventListener('click', function() {
+        immagineCorrente = index;
+        immagineCorrenteThumbnail = index;
+        captionCorrente = index;
+        updateCarousel();
+        startAutoplay()
+    });
+});
+
+
+
+function updateCarousel() {
+    const bigImages = document.querySelectorAll('main > div:first-child img');
+    const captions = document.querySelectorAll('main > div:first-child div');
+    const thumbnails = document.querySelectorAll('figure img');
+  
+    bigImages.forEach((img) => img.classList.remove('active'));
+    captions.forEach((caption) => caption.classList.remove('active'));
+    thumbnails.forEach((thumb) => thumb.classList.remove('opacity'));
+  
+    bigImages[immagineCorrente].classList.add('active');
+    captions[immagineCorrenteThumbnail].classList.add('active');
+    thumbnails[captionCorrente].classList.add('opacity');
+}
+
+const playButton = document.getElementById("playButton");
+const stopButton = document.getElementById("stopButton");
+const reverseButton = document.getElementById("reverseButton");
+
+playButton.addEventListener("click", startAutoplay);
+stopButton.addEventListener("click", stopAutoplay);
+reverseButton.addEventListener("click", toggleAutoplayDirection);
+
+function toggleAutoplayDirection() {
+    autoplayDirection *= -1;
+}
+
+function startAutoplay() {
+    autoplayTimer = setInterval(function() {
+        if (immagineCorrente == animeArray.length - 1 && autoplayDirection === 1) {
+            immagineCorrente = 0;
+        } else if (immagineCorrente === 0 && autoplayDirection === -1) {
+            immagineCorrente = animeArray.length - 1;
+        } else {
+            immagineCorrente += autoplayDirection;
+        }
+        immagineCorrenteThumbnail = immagineCorrente;
+        captionCorrente = immagineCorrente;
+        updateCarousel();
+    }, 3000);
+}
+
+function stopAutoplay() {
+    clearInterval(autoplayTimer);
+}
+  
